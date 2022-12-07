@@ -34,53 +34,60 @@ export function Search() {
 
 			<Grid style={ { marginTop: 10 } }>
 				{
-					msg.map((item, index) => (
-						<>
-							<Grid.Row key={ index }>
-								<Grid.Column>
-									<Container>
-										<Header as="h3">
-											{ item.Name }
-										</Header>
+					msg.map((item, index) => {
+						/**
+						 * Create a Google Maps URL
+						 */
+						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.AddressNumber } ${ item.Street }, ${ item.City }, ${ item.State }`.replace(" ", "+"));
 
-										<Segment>
-											{ item.AddressNumber } { item.Street }, { item.City }, { item.State }
-										</Segment>
+						return (
+							<>
+								<Grid.Row key={ index }>
+									<Grid.Column>
+										<Container>
+											<Header as="h3">
+												{ item.Name }
+											</Header>
 
-										<Table>
-											<Table.Header>
-												<Table.Row>
-													<Table.HeaderCell>Flag</Table.HeaderCell>
-													<Table.HeaderCell>Value</Table.HeaderCell>
-												</Table.Row>
-											</Table.Header>
+											<Segment>
+												<a href={ url } target="_blank" rel="noreferrer">{ item.AddressNumber } { item.Street }, { item.City }, { item.State }</a>
+											</Segment>
 
-											<Table.Body>
-												<Table.Row>
-													<Table.Cell>On Premise</Table.Cell>
-													<Table.Cell>{ item.IsOnPremise }</Table.Cell>
-												</Table.Row>
-												<Table.Row>
-													<Table.Cell>Off Premise</Table.Cell>
-													<Table.Cell>{ item.IsOffPremise }</Table.Cell>
-												</Table.Row>
-												<Table.Row>
-													<Table.Cell>Is Ownership Transferable</Table.Cell>
-													<Table.Cell>{ item.IsStatuteOwnershipTransferable }</Table.Cell>
-												</Table.Row>
-												<Table.Row>
-													<Table.Cell>Is Location Transferable</Table.Cell>
-													<Table.Cell>{ item.IsStatuteLocationTransferable }</Table.Cell>
-												</Table.Row>
-											</Table.Body>
-										</Table>
-									</Container>
-								</Grid.Column>
-							</Grid.Row>
+											<Table>
+												<Table.Header>
+													<Table.Row>
+														<Table.HeaderCell>Flag</Table.HeaderCell>
+														<Table.HeaderCell>Value</Table.HeaderCell>
+													</Table.Row>
+												</Table.Header>
 
-							<hr />
-						</>
-					))
+												<Table.Body>
+													<Table.Row>
+														<Table.Cell>On Premise</Table.Cell>
+														<Table.Cell>{ item.IsOnPremise }</Table.Cell>
+													</Table.Row>
+													<Table.Row>
+														<Table.Cell>Off Premise</Table.Cell>
+														<Table.Cell>{ item.IsOffPremise }</Table.Cell>
+													</Table.Row>
+													<Table.Row>
+														<Table.Cell>Is Ownership Transferable</Table.Cell>
+														<Table.Cell>{ item.IsStatuteOwnershipTransferable }</Table.Cell>
+													</Table.Row>
+													<Table.Row>
+														<Table.Cell>Is Location Transferable</Table.Cell>
+														<Table.Cell>{ item.IsStatuteLocationTransferable }</Table.Cell>
+													</Table.Row>
+												</Table.Body>
+											</Table>
+										</Container>
+									</Grid.Column>
+								</Grid.Row>
+
+								<hr />
+							</>
+						);
+					})
 				}
 			</Grid>
 		</>
