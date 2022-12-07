@@ -6,15 +6,13 @@ export function Default() {
 	useEffect(() => {
 		fetch(`https://kiszka.com:3001/`)
 		.then(res => res.json())
-		.then(data => {
-			setMsg(data.message);
-		});
+		.then(data => setMsg(data));
 	}, []);
 
 	return (
-		<>
-			{ msg }
-		</>
+		<pre>
+			{ JSON.stringify(msg, null, 2) }
+		</pre>
 	);
 };
 

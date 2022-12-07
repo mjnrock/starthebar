@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const https = require("https");
 const fs = require("fs");
+const mysql = require("mysql");
 const port = 3001;
 
 var key = fs.readFileSync(__dirname + "/certs/kiszka.key");
@@ -14,9 +15,20 @@ var options = {
 app = express();
 app.use(cors());
 
+const db = mysql.createPool({
+	host: "localhost",
+	user: "root",
+	password: "password",
+	database: "starthebar",
+});
+
 app.get("/", (req, res) => {
-	res.json({
-		message: "Hello from the API Server!",
+	db.query(`SELECT * FROM MichiganLicenses LIMIT 20`, (err, result) => {
+		if (err) {
+			console.log(err);
+		} else {	
+			res.json(result);
+		}
 	});
 });
 
