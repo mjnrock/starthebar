@@ -3,6 +3,7 @@ import { Header, Container, Table, Grid, Segment } from "semantic-ui-react";
 
 export function Search() {
 	const [ msg, setMsg ] = useState(null);
+	const [ area, setArea ] = useState("Lake Orion");
 
 	useEffect(() => {
 		fetch(`https://kiszka.com:3001/`, {
@@ -12,7 +13,7 @@ export function Search() {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
-				area: "Lake Orion"
+				area,
 			})
 		})
 			.then(res => res.json())
@@ -24,57 +25,65 @@ export function Search() {
 	}
 
 	return (
-		<Grid>
-			{
-				msg.map((item, index) => (
-					<>
-						<Grid.Row key={ index }>
-							<Grid.Column>
-								<Container>
-									<Header as="h3">
-										{ item.Name }
-									</Header>
+		<>
+			<Header as="h1" textAlign="center" style={ { marginTop: 10 } }>
+				{ area }
+			</Header>
 
-									<Segment>
-										{ item.AddressNumber } { item.Street }, { item.City }, { item.State }
-									</Segment>
+			<hr />
 
-									<Table>
-										<Table.Header>
-											<Table.Row>
-												<Table.HeaderCell>Flag</Table.HeaderCell>
-												<Table.HeaderCell>Value</Table.HeaderCell>
-											</Table.Row>
-										</Table.Header>
+			<Grid style={ { marginTop: 10 } }>
+				{
+					msg.map((item, index) => (
+						<>
+							<Grid.Row key={ index }>
+								<Grid.Column>
+									<Container>
+										<Header as="h3">
+											{ item.Name }
+										</Header>
 
-										<Table.Body>
-											<Table.Row>
-												<Table.Cell>On Premise</Table.Cell>
-												<Table.Cell>{ item.IsOnPremise }</Table.Cell>
-											</Table.Row>
-											<Table.Row>
-												<Table.Cell>Off Premise</Table.Cell>
-												<Table.Cell>{ item.IsOffPremise }</Table.Cell>
-											</Table.Row>
-											<Table.Row>
-												<Table.Cell>Is Ownership Transferable</Table.Cell>
-												<Table.Cell>{ item.IsStatuteOwnershipTransferable }</Table.Cell>
-											</Table.Row>
-											<Table.Row>
-												<Table.Cell>Is Location Transferable</Table.Cell>
-												<Table.Cell>{ item.IsStatuteLocationTransferable }</Table.Cell>
-											</Table.Row>
-										</Table.Body>
-									</Table>
-								</Container>
-							</Grid.Column>
-						</Grid.Row>
+										<Segment>
+											{ item.AddressNumber } { item.Street }, { item.City }, { item.State }
+										</Segment>
 
-						<hr />
-					</>
-				))
-			}
-		</Grid>
+										<Table>
+											<Table.Header>
+												<Table.Row>
+													<Table.HeaderCell>Flag</Table.HeaderCell>
+													<Table.HeaderCell>Value</Table.HeaderCell>
+												</Table.Row>
+											</Table.Header>
+
+											<Table.Body>
+												<Table.Row>
+													<Table.Cell>On Premise</Table.Cell>
+													<Table.Cell>{ item.IsOnPremise }</Table.Cell>
+												</Table.Row>
+												<Table.Row>
+													<Table.Cell>Off Premise</Table.Cell>
+													<Table.Cell>{ item.IsOffPremise }</Table.Cell>
+												</Table.Row>
+												<Table.Row>
+													<Table.Cell>Is Ownership Transferable</Table.Cell>
+													<Table.Cell>{ item.IsStatuteOwnershipTransferable }</Table.Cell>
+												</Table.Row>
+												<Table.Row>
+													<Table.Cell>Is Location Transferable</Table.Cell>
+													<Table.Cell>{ item.IsStatuteLocationTransferable }</Table.Cell>
+												</Table.Row>
+											</Table.Body>
+										</Table>
+									</Container>
+								</Grid.Column>
+							</Grid.Row>
+
+							<hr />
+						</>
+					))
+				}
+			</Grid>
+		</>
 	);
 };
 
