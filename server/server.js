@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const https = require("https");
+const http = require("http");
 const fs = require("fs");
 const mysql = require("mysql");
 const port = 3001;
@@ -26,10 +27,10 @@ const db = mysql.createPool({
 });
 
 app.post("/", (req, res) => {
-	const { area } = req.body;
+	const { area, onPremiseOnly } = req.body;
 	// area.map(a => `City LIKE '%${ a }%'`).join(" OR ")
 
-	db.query(`SELECT * FROM MichiganLicenses WHERE City LIKE '%${ area }%'`, (err, result) => {
+	db.query(`SELECT * FROM vwMichiganVenues WHERE ${ onPremiseOnly ? `IsOnPremise = 1 AND ` : `` } City LIKE '%${ area }%'`, (err, result) => {
 		if (err) {
 			console.log(err);
 		} else {	
@@ -38,7 +39,8 @@ app.post("/", (req, res) => {
 	});
 });
 
-var server = https.createServer(options, app);
+// let server = https.createServer(options, app);
+let server = http.createServer(options, app);
 
 server.listen(port, () => {
 	console.log("Server started on: " + port)

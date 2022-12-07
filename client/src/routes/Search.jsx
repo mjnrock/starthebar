@@ -6,7 +6,8 @@ export function Search() {
 	const [ area, setArea ] = useState("Lake Orion");
 
 	useEffect(() => {
-		fetch(`https://kiszka.com:3001/`, {
+		// fetch(`https://kiszka.com:3001/`, {
+		fetch(`http://192.168.86.100:3001/`, {
 			method: "POST",
 			headers: {
 				"Accept": "application/json",
@@ -14,6 +15,7 @@ export function Search() {
 			},
 			body: JSON.stringify({
 				area,
+				onPremiseOnly: true,
 			})
 		})
 			.then(res => res.json())
@@ -38,7 +40,7 @@ export function Search() {
 						/**
 						 * Create a Google Maps URL
 						 */
-						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.AddressNumber } ${ item.Street }, ${ item.City }, ${ item.State }`.replace(" ", "+"));
+						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.FullAddress }`.replace(" ", "+"));
 
 						return (
 							<>
@@ -50,7 +52,7 @@ export function Search() {
 											</Header>
 
 											<Segment>
-												<a href={ url } target="_blank" rel="noreferrer">{ item.AddressNumber } { item.Street }, { item.City }, { item.State }</a>
+												<a href={ url } target="_blank" rel="noreferrer">{ item.FullAddress }</a>
 											</Segment>
 
 											<Table>
@@ -63,20 +65,16 @@ export function Search() {
 
 												<Table.Body>
 													<Table.Row>
+														<Table.Cell>Is Social District</Table.Cell>
+														<Table.Cell>{ item.IsSocialDistrict ? "Yes" : "No" }</Table.Cell>
+													</Table.Row>
+													<Table.Row>
 														<Table.Cell>On Premise</Table.Cell>
-														<Table.Cell>{ item.IsOnPremise }</Table.Cell>
+														<Table.Cell>{ item.IsOnPremise ? "Yes" : "No" }</Table.Cell>
 													</Table.Row>
 													<Table.Row>
 														<Table.Cell>Off Premise</Table.Cell>
-														<Table.Cell>{ item.IsOffPremise }</Table.Cell>
-													</Table.Row>
-													<Table.Row>
-														<Table.Cell>Is Ownership Transferable</Table.Cell>
-														<Table.Cell>{ item.IsStatuteOwnershipTransferable }</Table.Cell>
-													</Table.Row>
-													<Table.Row>
-														<Table.Cell>Is Location Transferable</Table.Cell>
-														<Table.Cell>{ item.IsStatuteLocationTransferable }</Table.Cell>
+														<Table.Cell>{ item.IsOffPremise ? "Yes" : "No" }</Table.Cell>
 													</Table.Row>
 												</Table.Body>
 											</Table>

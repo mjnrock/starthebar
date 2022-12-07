@@ -1,3 +1,7 @@
+/*
+* TODO: Some `NumberAddress` entries record multiple locations (e.g. "3043 & 3047 S BALDWIN RD"); Write code to search for presence of & and deal accordingly [NOTE: I've seen 3 numbers in 1 record])
+*/
+
 DROP TABLE IF EXISTS michiganlicenses;
 CREATE Table michiganlicenses AS
 WITH MichiganLicenseBase AS (
