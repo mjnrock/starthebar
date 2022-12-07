@@ -9,6 +9,7 @@ export function App() {
 	return (
 		<Routes>
 			<Route path="*" element={ <Router.Default /> } />
+			<Route path="search" element={ <Router.Search /> } />
 		</Routes>
 	);
 }

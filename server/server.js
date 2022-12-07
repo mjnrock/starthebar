@@ -5,15 +5,18 @@ const fs = require("fs");
 const mysql = require("mysql");
 const port = 3001;
 
-var key = fs.readFileSync(__dirname + "/certs/kiszka.key");
-var cert = fs.readFileSync(__dirname + "/certs/kiszka.crt");
-var options = {
+let key = fs.readFileSync(__dirname + "/certs/kiszka.key");
+let cert = fs.readFileSync(__dirname + "/certs/kiszka.crt");
+let options = {
 	key: key,
 	cert: cert
 };
 
 app = express();
+
 app.use(cors());
+app.use(express.urlencoded());
+app.use(express.json());
 
 const db = mysql.createPool({
 	host: "localhost",
@@ -22,8 +25,11 @@ const db = mysql.createPool({
 	database: "starthebar",
 });
 
-app.get("/", (req, res) => {
-	db.query(`SELECT * FROM MichiganLicenses LIMIT 20`, (err, result) => {
+app.post("/", (req, res) => {
+	const { area } = req.body;
+	// area.map(a => `City LIKE '%${ a }%'`).join(" OR ")
+
+	db.query(`SELECT * FROM MichiganLicenses WHERE City LIKE '%${ area }%'`, (err, result) => {
 		if (err) {
 			console.log(err);
 		} else {	
