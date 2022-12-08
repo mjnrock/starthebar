@@ -19,7 +19,7 @@ export function InfoPane({ searchType }) {
 				<p>Search for results within a provided area</p>
 				<p>For multiple areas, separate with a `||`</p>
 				<p>Example: `Oxford||Lake Orion`</p>
-				<p>NOTE: All searches employ a wildcard wrapper: '%@term%'</p>
+				<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
 			</Message>
 		);
 	} else if(searchType === "name") {
@@ -28,7 +28,7 @@ export function InfoPane({ searchType }) {
 				<Message.Header>Search by Name</Message.Header>
 				<p>Name uses the <strong>DBA Name</strong> first, and if absent, the <strong>Legal Name</strong> as the fallback</p>
 				<p>Use `||` for an `OR` join, and `&&` for an `AND` join</p>
-				<p>NOTE: All searches employ a wildcard wrapper: '%@term%'</p>
+				<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
 			</Message>
 		);
 	} else if(searchType === "tag") {
@@ -38,7 +38,7 @@ export function InfoPane({ searchType }) {
 				<p>Using a `tag:value` syntax, you can search key:value pairs within the database.</p>
 				<p>Use `||` for an `OR` join, and `&&` for an `AND` join</p>
 				<p>Example: `tag:food||tag:bar`, `tag:food&&tag:bar`</p>
-				<p>NOTE: All searches employ a wildcard wrapper: '%@term%'</p>
+				<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
 			</Message>
 		);
 	}
