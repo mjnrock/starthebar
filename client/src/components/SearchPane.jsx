@@ -92,7 +92,7 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 
 export function SearchResult({ callback, result } = {}) {
 	const searchRef = useRef(null);
-	const [ searchType, setSearchType ] = useState("area");
+	const [ searchType, setSearchType ] = useState("tag");
 	const [ searchTerm, setSearchTerm ] = useState("");
 	const [ history, setHistory ] = useState({
 		area: [],

@@ -47,7 +47,7 @@ export function Search() {
 						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.FullAddress }`.replace(" ", "+"));
 
 						return (
-							<SearchResult key={ item.FullAddress } item={ item } url={ url } />
+							<SearchResult key={ item.LegalName + item.FullAddress } item={ item } url={ url } />
 						);
 					})
 				}
