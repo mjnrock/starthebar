@@ -27,9 +27,8 @@ const db = mysql.createPool({
 });
 
 app.post("/", (req, res) => {
-	console.log(req.body);
+	console.info(req.body);
 	const { searchType, data, onPremiseOnly } = req.body;
-	// area.map(a => `City LIKE '%${ a }%'`).join(" OR ")
 
 	if(searchType === "area") {
 		let areas = data.split("||");

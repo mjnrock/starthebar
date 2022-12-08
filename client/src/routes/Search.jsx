@@ -4,7 +4,6 @@ import SearchResult from "../components/SearchResult";
 import SearchPane from "../components/SearchPane";
 
 function API(searchType, data, opts = {}) {
-	console.log(searchType, data, opts)
 	return new Promise((resolve, reject) => {
 		// fetch(`https://kiszka.com:3001/`, {
 		fetch(`http://192.168.86.100:3001/`, {
