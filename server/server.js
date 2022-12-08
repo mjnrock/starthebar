@@ -27,16 +27,78 @@ const db = mysql.createPool({
 });
 
 app.post("/", (req, res) => {
-	const { area, onPremiseOnly } = req.body;
+	console.log(req.body);
+	const { searchType, data, onPremiseOnly } = req.body;
 	// area.map(a => `City LIKE '%${ a }%'`).join(" OR ")
 
-	db.query(`SELECT * FROM vwMichiganVenues WHERE ${ onPremiseOnly ? `IsOnPremise = 1 AND ` : `` } City LIKE '%${ area }%'`, (err, result) => {
-		if (err) {
-			console.log(err);
-		} else {	
-			res.json(result);
+	if(searchType === "area") {
+		let areas = data.split("||");
+
+		if(data.includes("||")) {
+			terms = data.split("||").map(cond => cond.split(":"));
 		}
-	});
+
+		db.query(`SELECT * FROM vwMichiganVenues WHERE ${ onPremiseOnly ? `IsOnPremise = 1 AND ` : `` } ${ areas.map(a => `CITY LIKE '%${ a }%'`).join(" OR ") }`, (err, result) => {
+			res.json(result);
+		});
+	} else if(searchType === "name") {
+		let names = data,
+			joinType = "OR";
+
+		if(data.includes("||")) {
+			names = data.split("||");
+		} else if(data.includes("&&")) {
+			names = data.split("&&");
+			joinType = "AND";
+		}
+
+		let where = names.reduce((a, name) => {
+			if(name != null) {
+				return [ `NAME LIKE '%${ name }%'`, ...a ];
+			}
+
+			return a;
+		}, []);
+
+		if(joinType === "OR") {
+			where = where.join(" OR ");
+		} else {
+			where = where.join(" AND ");
+		}
+
+		db.query(`SELECT * FROM vwMichiganVenues WHERE ${ onPremiseOnly ? `IsOnPremise = 1 AND ` : `` } ${ where }`, (err, result) => {
+			res.json(result);
+		});
+	} else if(searchType === "tag") {
+		let terms = [ data.split(":") ],
+			joinType = "OR";
+		if(data.includes("&&")) {
+			terms = data.split("&&").map(cond => cond.split(":"));
+			joinType = "AND";
+		} else if(data.includes("||")) {
+			terms = data.split("||").map(cond => cond.split(":"));
+		}
+
+		let where = terms.reduce((a, [ term, value ]) => {
+			if(value != null) {
+				return [ `${ term.toUpperCase() } LIKE '%${ value }%'`, ...a ];
+			}
+
+			return a;
+		}, []);
+
+		if(joinType === "OR") {
+			where = where.join(" OR ");
+		} else {
+			where = where.join(" AND ");
+		}
+
+		if(where) {
+			db.query(`SELECT * FROM vwMichiganVenues WHERE ${ where }`, (err, result) => {
+				res.json(result);
+			});
+		}
+	}
 });
 
 // let server = https.createServer(options, app);

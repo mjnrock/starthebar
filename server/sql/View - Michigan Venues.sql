@@ -28,4 +28,6 @@ FROM
     LEFT JOIN MichiganSocialDistrict msd
 		ON ml.LARABusinessID = msd.LARABusinessID
 WHERE
-	ml.IsSuspectRecord = 0;
+	ml.IsSuspectRecord = 0
+ORDER BY
+	Name;
