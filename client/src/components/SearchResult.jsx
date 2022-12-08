@@ -14,7 +14,7 @@ export function SearchResult({ item, url } = {}) {
 			return [ ...a, (
 				<Label key={ flag }>
 					<Icon name="check" />
-					{ flag.match(/[A-Z][a-z]+/g).join(" ") }
+					{ flag.replace("Is", "").match(/[A-Z][a-z]+/g).join(" ") }
 				</Label>
 			) ];
 		}
