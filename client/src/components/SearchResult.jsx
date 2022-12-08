@@ -6,6 +6,7 @@ const VenueFlags = [
 	`IsOffPremise`,
 	`IsBrewery`,
 	`IsWinery`,
+	`IsDistillery`,
 ];
 
 export function SearchResult({ item, url } = {}) {
@@ -21,6 +22,8 @@ export function SearchResult({ item, url } = {}) {
 
 		return a;
 	}, []);
+
+	let googleQuery = `${ item.Name } ${ item.FullAddress }`.replace(/ /g, "+");
 
 	return (
 		<Segment raised>
@@ -42,6 +45,8 @@ export function SearchResult({ item, url } = {}) {
 								</div>
 							) : null
 						}
+
+						{/* <iframe src={ `https://www.google.com/search?q=${ googleQuery }` } style={ { width: `100%`, height: 300, border: 0 } } loading="lazy" /> */}
 					</Container>
 				</Grid.Column>
 			</Grid.Row>

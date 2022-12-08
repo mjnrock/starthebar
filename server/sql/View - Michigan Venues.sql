@@ -24,7 +24,8 @@ SELECT DISTINCT
 	IsOnPremise,
 	IsOffPremise,
     IsBrewery,
-    IsWinery
+    IsWinery,
+    IsDistillery
 FROM
 	MichiganLicenses ml
     LEFT JOIN MichiganSocialDistrict msd

@@ -31,7 +31,8 @@ WITH MichiganLicenseBase AS (
 		IsOnPremise,
 		IsOffPremise,
 		IsBrewery,
-		IsWinery
+		IsWinery,
+        IsDistillery
 	FROM (
 		SELECT
 			MichiganLicensesStagingID,
@@ -82,11 +83,11 @@ WITH MichiganLicenseBase AS (
 				ELSE NULL
 			END AS IsStatuteLocationTransferable,
 			CASE
-				WHEN LicenseMask & 2 << 1 THEN 1
+				WHEN LicenseMask & 2 << 0 THEN 1
 				ELSE 0
 			END AS IsOnPremise,
 			CASE
-				WHEN LicenseMask & 2 << 2 THEN 1
+				WHEN LicenseMask & 2 << 1 THEN 1
 				ELSE 0
 			END AS IsOffPremise,
 			CASE
@@ -96,7 +97,11 @@ WITH MichiganLicenseBase AS (
 			CASE
 				WHEN LicenseTypeMask & 2 << 1 THEN 1
 				ELSE 0
-			END AS IsWinery
+			END AS IsWinery,
+			CASE
+				WHEN LicenseTypeMask & 2 << 2 THEN 1
+				ELSE 0
+			END AS IsDistillery
 		FROM
 			(
 				SELECT
@@ -111,7 +116,7 @@ WITH MichiganLicenseBase AS (
 					LARABusinessID,
 					SUM(DISTINCT CASE
 						WHEN LicenseGroup = 'Retail - On Premises' THEN 2 << 0
-						WHEN LicenseType = 'On-Premises Tasting Room Permit' THEN 0
+						WHEN LicenseType = 'On-Premises Tasting Room Permit' THEN 2 << 0
 						WHEN LicenseGroup = 'Retail - Off Premises' THEN 2 << 1
 						WHEN LicenseGroup = 'Retail - Off Premise' THEN 2 << 1
 						WHEN LicenseGroup = 'Non-Profit' THEN 2 << 2
