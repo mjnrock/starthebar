@@ -62,7 +62,7 @@ export function InfoPane({ searchType }) {
 				<Message.Content>
 					<p>Using a `tag:value` syntax, you can search key:value pairs within the database.  Use `||` for an `OR` join, and `&&` for an `AND` join</p>
 					<p style={ { marginTop: 10 } }>Tags:</p>
-					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onClick={ e => navigator.clipboard.writeText(t) }>{ t }</Label>) }</div>
+					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onClick={ e => navigator.clipboard.writeText(`${ t }:`) }>{ t }</Label>) }</div>
 				</Message.Content>
 			</Message>
 		);
