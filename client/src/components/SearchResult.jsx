@@ -1,6 +1,27 @@
-import { Header, Container, Table, Grid, Segment } from "semantic-ui-react";
+import { Header, Container, Table, Grid, Segment, Label, Icon } from "semantic-ui-react";
+
+const VenueFlags = [
+	`IsSocialDistrict`,
+	`IsOnPremise`,
+	`IsOffPremise`,
+	`IsBrewery`,
+	`IsWinery`,
+];
 
 export function SearchResult({ item, url } = {}) {
+	let flags = VenueFlags.reduce((a, flag, i) => {
+		if(!!item[ flag ]) {
+			return [ ...a, (
+				<Label key={ flag }>
+					<Icon name="check" />
+					{ flag.match(/[A-Z][a-z]+/g).join(" ") }
+				</Label>
+			) ];
+		}
+
+		return a;
+	}, []);
+
 	return (
 		<Segment raised>
 			<Grid.Row>
@@ -14,29 +35,15 @@ export function SearchResult({ item, url } = {}) {
 							<a href={ url } target="_blank" rel="noreferrer">{ item.FullAddress }</a>
 						</Segment>
 
-						<Table>
-							<Table.Header>
-								<Table.Row>
-									<Table.HeaderCell>Flag</Table.HeaderCell>
-									<Table.HeaderCell>Value</Table.HeaderCell>
-								</Table.Row>
-							</Table.Header>
-
-							<Table.Body>
-								<Table.Row>
-									<Table.Cell>Is Social District</Table.Cell>
-									<Table.Cell>{ item.IsSocialDistrict ? "Yes" : "No" }</Table.Cell>
-								</Table.Row>
-								<Table.Row>
-									<Table.Cell>On Premise</Table.Cell>
-									<Table.Cell>{ item.IsOnPremise ? "Yes" : "No" }</Table.Cell>
-								</Table.Row>
-								<Table.Row>
-									<Table.Cell>Off Premise</Table.Cell>
-									<Table.Cell>{ item.IsOffPremise ? "Yes" : "No" }</Table.Cell>
-								</Table.Row>
-							</Table.Body>
-						</Table>
+						{
+							flags.length ? (
+								<Segment>
+									{
+										flags
+									}
+								</Segment>
+							) : null
+						}
 					</Container>
 				</Grid.Column>
 			</Grid.Row>

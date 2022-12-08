@@ -1,5 +1,4 @@
 DROP VIEW IF EXISTS vwMichiganVenues;
-
 CREATE VIEW vwMichiganVenues AS
 SELECT DISTINCT
 	ml.LARABusinessID,
@@ -15,6 +14,7 @@ SELECT DISTINCT
 	ZIP,
     CONCAT(ml.AddressNumber, " ", ml.Street, ", ", ml.City, ", ", ml.State, " ", ml.Zip) AS FullAddress,
 	LicenseMask,
+	LicenseTypeMask,
     msd.PermitLocation AS SocialDistrict,
     CASE
 		WHEN msd.IsPermitPending = 1 THEN 2
@@ -22,7 +22,9 @@ SELECT DISTINCT
         ELSE 0
     END AS IsSocialDistrict,
 	IsOnPremise,
-	IsOffPremise
+	IsOffPremise,
+    IsBrewery,
+    IsWinery
 FROM
 	MichiganLicenses ml
     LEFT JOIN MichiganSocialDistrict msd

@@ -15,10 +15,13 @@ let columnList = [
 	`ZIP`,
 	`FullAddress`,
 	`LicenseMask`,
+	`LicenseTypeMask`,
 	`SocialDistrict`,
 	`IsSocialDistrict`,
 	`IsOnPremise`,
-	`IsOffPremise`
+	`IsOffPremise`,
+    `IsBrewery`,
+    `IsWinery`
 ].map(v => v.toLowerCase());
 
 export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {

@@ -25,10 +25,13 @@ WITH MichiganLicenseBase AS (
 		LicenseType,
 		LicenseSubtype,
 		LicenseMask,
+		LicenseTypeMask,
 		IsStatuteOwnershipTransferable,
 		IsStatuteLocationTransferable,
 		IsOnPremise,
-		IsOffPremise
+		IsOffPremise,
+		IsBrewery,
+		IsWinery
 	FROM (
 		SELECT
 			MichiganLicensesStagingID,
@@ -67,6 +70,7 @@ WITH MichiganLicenseBase AS (
 				ELSE LicenseSubtype
 			END AS LicenseSubtype,
 			LicenseMask,
+            LicenseTypeMask,
 			CASE
 				WHEN StatuteOwnershipTransferable = 'Y' OR StatuteOwnershipTransferable = 'YES' THEN 1
 				WHEN StatuteOwnershipTransferable = 'N' OR StatuteOwnershipTransferable = 'NO' THEN 0
@@ -84,7 +88,15 @@ WITH MichiganLicenseBase AS (
 			CASE
 				WHEN LicenseMask & 2 << 2 THEN 1
 				ELSE 0
-			END AS IsOffPremise
+			END AS IsOffPremise,
+			CASE
+				WHEN LicenseTypeMask & 2 << 0 THEN 1
+				ELSE 0
+			END AS IsBrewery,
+			CASE
+				WHEN LicenseTypeMask & 2 << 1 THEN 1
+				ELSE 0
+			END AS IsWinery
 		FROM
 			(
 				SELECT
@@ -98,13 +110,24 @@ WITH MichiganLicenseBase AS (
 				SELECT
 					LARABusinessID,
 					SUM(DISTINCT CASE
-						WHEN LicenseGroup = 'Retail - On Premises' THEN 2 << 1
-						WHEN LicenseGroup = 'Retail - Off Premises' THEN 2 << 2
-						WHEN LicenseGroup = 'Retail - Off Premise' THEN 2 << 2
-						WHEN LicenseGroup = 'Non-Profit' THEN 2 << 3
-						WHEN LicenseGroup = 'Manufacturer' THEN 2 << 4
-						WHEN LicenseGroup = 'Wholesale' THEN 2 << 5
-					END) AS LicenseMask
+						WHEN LicenseGroup = 'Retail - On Premises' THEN 2 << 0
+						WHEN LicenseType = 'On-Premises Tasting Room Permit' THEN 0
+						WHEN LicenseGroup = 'Retail - Off Premises' THEN 2 << 1
+						WHEN LicenseGroup = 'Retail - Off Premise' THEN 2 << 1
+						WHEN LicenseGroup = 'Non-Profit' THEN 2 << 2
+						WHEN LicenseGroup = 'Manufacturer' THEN 2 << 3
+						WHEN LicenseGroup = 'Wholesale' THEN 2 << 4
+                        ELSE 0
+					END) AS LicenseMask,
+					SUM(DISTINCT CASE
+						WHEN LicenseType = 'Micro Brewer' THEN 2 << 0
+						WHEN LicenseType = 'Brew Pub' THEN 2 << 0
+						WHEN LicenseType = 'Brewer' THEN 2 << 0
+						WHEN LicenseType = 'Small Wine Maker' THEN 2 << 1
+						WHEN LicenseType = 'Wine Maker' THEN 2 << 1
+                        WHEN LicenseType = 'Small Distiller' THEN 2 << 2
+                        ELSE 0
+					END) AS LicenseTypeMask
 				FROM
 					starthebar.michiganlicensesstaging
 				GROUP BY
