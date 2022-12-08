@@ -31,17 +31,15 @@ export function SearchResult({ item, url } = {}) {
 							{ item.Name }
 						</Header>
 
-						<Segment>
-							<a href={ url } target="_blank" rel="noreferrer">{ item.FullAddress }</a>
-						</Segment>
+						<a href={ url } target="_blank" rel="noreferrer">{ item.FullAddress }</a>
 
 						{
 							flags.length ? (
-								<Segment>
+								<div style={ { marginTop: 10 } }>
 									{
 										flags
 									}
-								</Segment>
+								</div>
 							) : null
 						}
 					</Container>
