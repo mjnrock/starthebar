@@ -26,9 +26,9 @@ function API(searchType, data, opts = {}) {
 export function Search() {
 	const [ msg, setMsg ] = useState([]);
 
-	if(!msg) {
+	if(!msg || !msg.length) {
 		return (
-			<SearchPane callback={ setMsg } />
+			<SearchPane callback={ (...args) => API(...args).then(setMsg) } result={ msg } />
 		);
 	}
 

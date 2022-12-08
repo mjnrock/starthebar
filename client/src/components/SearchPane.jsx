@@ -104,11 +104,11 @@ export function SearchResult({ callback, result } = {}) {
 				<Input style={ { width: "50%" } } type="text" value={ searchTerm } onChange={ e => setSearchTerm(e.target.value) } />
 			</div>
 
-			<Segment raised>
+			{/* <Segment raised>
 				<Header as="h2" textAlign="center">
 					{ searchTerm }
 				</Header>
-			</Segment>
+			</Segment> */}
 
 			<div style={ { textAlign: "center" } }>{ (result || []).length } Results</div>
 		</Container>

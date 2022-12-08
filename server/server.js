@@ -30,6 +30,12 @@ app.post("/", (req, res) => {
 	console.info(req.body);
 	const { searchType, data, onPremiseOnly } = req.body;
 
+	if(data.length < 1) {
+		res.json([]);
+
+		return;
+	}
+
 	if(searchType === "area") {
 		let areas = data.split("||");
 
@@ -37,7 +43,7 @@ app.post("/", (req, res) => {
 			terms = data.split("||").map(cond => cond.split(":"));
 		}
 
-		db.query(`SELECT * FROM vwMichiganVenues WHERE ${ onPremiseOnly ? `IsOnPremise = 1 AND ` : `` } ${ areas.map(a => `CITY LIKE '%${ a }%'`).join(" OR ") }`, (err, result) => {
+		db.query(`SELECT * FROM vwMichiganVenues WHERE ${ areas.map(a => `CITY LIKE '%${ a }%'`).join(" OR ") }`, (err, result) => {
 			res.json(result);
 		});
 	} else if(searchType === "name") {
@@ -65,7 +71,7 @@ app.post("/", (req, res) => {
 			where = where.join(" AND ");
 		}
 
-		db.query(`SELECT * FROM vwMichiganVenues WHERE ${ onPremiseOnly ? `IsOnPremise = 1 AND ` : `` } ${ where }`, (err, result) => {
+		db.query(`SELECT * FROM vwMichiganVenues WHERE ${ where }`, (err, result) => {
 			res.json(result);
 		});
 	} else if(searchType === "tag") {
