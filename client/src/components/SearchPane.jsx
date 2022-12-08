@@ -28,10 +28,6 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 		setVisible(true);
 	}, [ searchType ]);
 
-	useEffect(() => {
-		console.log(visible)
-	}, [ visible ]);
-
 	if(searchType === "area") {
 		return (
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>

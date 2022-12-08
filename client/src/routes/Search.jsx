@@ -28,8 +28,6 @@ function API(searchType, data, opts = {}) {
 export function Search() {
 	const [ msg, setMsg ] = useState([]);
 
-	console.log(msg)
-
 	if(!msg || !msg.length) {
 		return (
 			<SearchPane callback={ (...args) => API(...args).then(data => setMsg(data)) } result={ msg } />
