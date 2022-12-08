@@ -1,5 +1,25 @@
 import { useState, useEffect } from "react";
-import { Header, Container, Segment, Button, Input, Message } from "semantic-ui-react";
+import { Header, Container, Segment, Button, Input, Message, Label } from "semantic-ui-react";
+
+let columnList = [
+	`LARABusinessID`,
+	`LegalName`,
+	`DBAName`,
+	`Name`,
+	`Phone`,
+	`AddressNumber`,
+	`Street`,
+	`City`,
+	`County`,
+	`State`,
+	`ZIP`,
+	`FullAddress`,
+	`LicenseMask`,
+	`SocialDistrict`,
+	`IsSocialDistrict`,
+	`IsOnPremise`,
+	`IsOffPremise`
+].map(v => v.toLowerCase());
 
 export function InfoPane({ searchType }) {
 	const [ visible, setVisible ] = useState(true);
@@ -16,29 +36,34 @@ export function InfoPane({ searchType }) {
 		return (
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>
 				<Message.Header>Search by Area</Message.Header>
-				<p>Search for results within a provided area</p>
-				<p>For multiple areas, separate with a `||`</p>
-				<p>Example: `Oxford||Lake Orion`</p>
-				<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
+				<Message.Content>
+					<p>Search for results within a provided area</p>
+					<p>For multiple areas, separate with a `||`</p>
+					<p>Example: `Oxford||Lake Orion`</p>
+					<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
+				</Message.Content>
 			</Message>
 		);
 	} else if(searchType === "name") {
 		return (
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>
 				<Message.Header>Search by Name</Message.Header>
-				<p>Name uses the <strong>DBA Name</strong> first, and if absent, the <strong>Legal Name</strong> as the fallback</p>
-				<p>Use `||` for an `OR` join, and `&&` for an `AND` join</p>
-				<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
+				<Message.Content>
+					<p>Name uses the <strong>DBA Name</strong> first, and if absent, the <strong>Legal Name</strong> as the fallback</p>
+					<p>Use `||` for an `OR` join, and `&&` for an `AND` join</p>
+					<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
+				</Message.Content>
 			</Message>
 		);
 	} else if(searchType === "tag") {
 		return (
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>
 				<Message.Header>Search by Tag(s)</Message.Header>
-				<p>Using a `tag:value` syntax, you can search key:value pairs within the database.</p>
-				<p>Use `||` for an `OR` join, and `&&` for an `AND` join</p>
-				<p>Example: `tag:food||tag:bar`, `tag:food&&tag:bar`</p>
-				<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
+				<Message.Content>
+					<p>Using a `tag:value` syntax, you can search key:value pairs within the database.  Use `||` for an `OR` join, and `&&` for an `AND` join</p>
+					<p style={ { marginTop: 10 } }>Tags:</p>
+					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onClick={ e => navigator.clipboard.writeText(t) }>{ t }</Label>) }</div>
+				</Message.Content>
 			</Message>
 		);
 	}
