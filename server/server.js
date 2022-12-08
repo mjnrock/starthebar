@@ -47,7 +47,7 @@ app.post("/", (req, res) => {
 			res.json(result);
 		});
 	} else if(searchType === "name") {
-		let names = data,
+		let names = [ data ],
 			joinType = "OR";
 
 		if(data.includes("||")) {

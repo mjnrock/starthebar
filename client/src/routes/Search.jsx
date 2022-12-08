@@ -4,6 +4,8 @@ import SearchResult from "../components/SearchResult";
 import SearchPane from "../components/SearchPane";
 
 function API(searchType, data, opts = {}) {
+	if(!searchType || !data) return Promise.resolve([]);
+
 	return new Promise((resolve, reject) => {
 		// fetch(`https://kiszka.com:3001/`, {
 		fetch(`http://192.168.86.100:3001/`, {
@@ -26,15 +28,17 @@ function API(searchType, data, opts = {}) {
 export function Search() {
 	const [ msg, setMsg ] = useState([]);
 
+	console.log(msg)
+
 	if(!msg || !msg.length) {
 		return (
-			<SearchPane callback={ (...args) => API(...args).then(setMsg) } result={ msg } />
+			<SearchPane callback={ (...args) => API(...args).then(data => setMsg(data)) } result={ msg } />
 		);
 	}
 
 	return (
 		<>
-			<SearchPane callback={ (...args) => API(...args).then(setMsg) } result={ msg } />
+			<SearchPane callback={ (...args) => API(...args).then(data => setMsg(data)) } result={ msg } />
 
 			<hr style={ { marginBottom: 40 } } />
 
@@ -45,7 +49,7 @@ export function Search() {
 						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.FullAddress }`.replace(" ", "+"));
 
 						return (
-							<SearchResult key={ item.LegalName } item={ item } url={ url } />
+							<SearchResult key={ item.FullAddress } item={ item } url={ url } />
 						);
 					})
 				}

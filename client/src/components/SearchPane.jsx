@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Header, Container, Segment, Button, Input, Message, Label } from "semantic-ui-react";
+import { useState, useEffect, useRef } from "react";
+import { Container, Button, Input, Message, Label } from "semantic-ui-react";
 
 let columnList = [
 	`LARABusinessID`,
@@ -21,7 +21,7 @@ let columnList = [
 	`IsOffPremise`
 ].map(v => v.toLowerCase());
 
-export function InfoPane({ searchType }) {
+export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 	const [ visible, setVisible ] = useState(true);
 
 	useEffect(() => {
@@ -62,7 +62,29 @@ export function InfoPane({ searchType }) {
 				<Message.Content>
 					<p>Using a `tag:value` syntax, you can search key:value pairs within the database.  Use `||` for an `OR` join, and `&&` for an `AND` join</p>
 					<p style={ { marginTop: 10 } }>Tags:</p>
-					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onClick={ e => navigator.clipboard.writeText(`${ t }:`) }>{ t }</Label>) }</div>
+					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onContextMenu={ e => e.preventDefault() } onMouseUp={ e => {
+						e.preventDefault();
+						
+						if(searchRef.current) {
+							let tag = `${ t }:`.toLowerCase();
+	
+							if(e.ctrlKey || e.button === 2) {
+								tag = `&&${ tag }`;
+							} else if(searchTerm.length) {
+								tag = `||${ tag }`;
+							}
+
+							if(searchTerm) {
+								setSearchTerm(searchTerm + tag);
+							} else {
+								setSearchTerm(`${ t }:`.toLowerCase());
+							}
+
+							searchRef.current.focus();
+							searchRef.current.select();
+						}
+
+					} }>{ t }</Label>) }</div>
 				</Message.Content>
 			</Message>
 		);
@@ -70,8 +92,14 @@ export function InfoPane({ searchType }) {
 }
 
 export function SearchResult({ callback, result } = {}) {
+	const searchRef = useRef(null);
 	const [ searchType, setSearchType ] = useState("area");
-	const [ searchTerm, setSearchTerm ] = useState("name:Lake Orion");
+	const [ searchTerm, setSearchTerm ] = useState("");
+	const [ history, setHistory ] = useState({
+		area: [],
+		name: [],
+		tag: [],
+	});
 
 	useEffect(() => {
 		let fn = e => {
@@ -79,6 +107,12 @@ export function SearchResult({ callback, result } = {}) {
 				callback(searchType, searchTerm, {
 					onPremiseOnly: true,
 				});
+
+				let h = history;
+				if(!h[ searchType ].includes(searchTerm)) {
+					h[ searchType ].push(searchTerm);
+					setHistory(h);
+				}
 			}
 		};
 
@@ -89,10 +123,16 @@ export function SearchResult({ callback, result } = {}) {
 		};
 	}, [ searchType, searchTerm ]);
 
+	useEffect(() => {
+		callback();
+		setSearchTerm("");
+		searchRef.current.focus();
+	}, [ searchType ]);
+
 	return (
 		<Container style={ { marginTop: 10, marginBottom: 10 } }>
 			<div style={ { textAlign: "center" } }>
-				<InfoPane searchType={ searchType } />
+				<InfoPane searchType={ searchType } searchRef={ searchRef } setSearchTerm={ setSearchTerm } searchTerm={ searchTerm } />
 				<Button.Group style={ { width: "50%", marginBottom: 10 } }>
 					<Button onClick={ e => setSearchType("area") } active={ searchType === "area" }>Area</Button>
 					<Button.Or />
@@ -101,16 +141,26 @@ export function SearchResult({ callback, result } = {}) {
 					<Button onClick={ e => setSearchType("tag") } active={ searchType === "tag" }>Tag</Button>
 				</Button.Group>
 				<br />
-				<Input style={ { width: "50%" } } type="text" value={ searchTerm } onChange={ e => setSearchTerm(e.target.value) } />
+				<Input ref={ searchRef } list={ searchType } style={ { width: "50%" } } type="text" value={ searchTerm } onChange={ e => setSearchTerm(e.target.value) } />
+				<datalist id="area">
+					{ history.area.map((v, i) => <option key={ i } value={ v } />) }
+				</datalist>
+				<datalist id="name">
+					{ history.name.map((v, i) => <option key={ i } value={ v } />) }
+				</datalist>
+				<datalist id="tag">
+					{ history.tag.map((v, i) => <option key={ i } value={ v } />) }
+				</datalist>
 			</div>
 
-			{/* <Segment raised>
-				<Header as="h2" textAlign="center">
-					{ searchTerm }
-				</Header>
-			</Segment> */}
+			{
+				(result || []).length ? (
+					<div style={ { textAlign: "center", marginTop: 10, fontFamily: "monospace" } }><strong>{ result.length }</strong> Result(s)</div>
+				) : (
+					null
+				)
+			}
 
-			<div style={ { textAlign: "center" } }>{ (result || []).length } Results</div>
 		</Container>
 	);
 };
