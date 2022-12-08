@@ -36,9 +36,7 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>
 				<Message.Header>Search by Area</Message.Header>
 				<Message.Content>
-					<p>Search for results within a provided area</p>
-					<p>For multiple areas, separate with a `||`</p>
-					<p>Example: `Oxford||Lake Orion`</p>
+					<p>Search for results within a provided area.  For multiple areas, separate with a `||`.</p>
 					<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
 				</Message.Content>
 			</Message>
@@ -48,8 +46,8 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>
 				<Message.Header>Search by Name</Message.Header>
 				<Message.Content>
-					<p>Name uses the <strong>DBA Name</strong> first, and if absent, the <strong>Legal Name</strong> as the fallback</p>
-					<p>Use `||` for an `OR` join, and `&&` for an `AND` join</p>
+					<p>Name uses the <strong>DBA Name</strong> first, and if absent, the <strong>Legal Name</strong> as the fallback.</p>
+					<p>Use `||` for an `OR` join, and `&&` for an `AND` join.</p>
 					<p>NOTE: All searches employ a wildcard wrapper: '%term%'</p>
 				</Message.Content>
 			</Message>
@@ -59,7 +57,7 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 			<Message onDismiss={ () => setVisible(false) } visible={ visible } hidden={ !visible }>
 				<Message.Header>Search by Tag(s)</Message.Header>
 				<Message.Content>
-					<p>Using a `tag:value` syntax, you can search key:value pairs within the database.  Use `||` for an `OR` join, and `&&` for an `AND` join</p>
+					<p>Using a `tag:value` syntax, you can search key:value pairs within the database.  Use `||` for an `OR` join, and `&&` for an `AND` join.</p>
 					<p style={ { marginTop: 10 } }>Tags:</p>
 					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onContextMenu={ e => e.preventDefault() } onMouseUp={ e => {
 						e.preventDefault();
