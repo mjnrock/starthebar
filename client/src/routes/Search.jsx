@@ -51,7 +51,7 @@ export function Search() {
 
 			<hr style={ { marginBottom: 40 } } />
 
-			<Grid textAlign="center">
+			<Grid textAlign="center" style={{ paddingBottom: 20 }}>
 				{
 					msg.map((item, index) => {
 						/* Create a Google Maps URL */

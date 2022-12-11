@@ -17,7 +17,7 @@ export function SearchResult({ item, url, resultsFilter } = {}) {
 					key={ flag }
 					color={ resultsFilter.includes(flag) ? "blue" : "" }
 				>
-					<Icon name="check" />
+					<Icon name="tag" />
 					{ flag.replace("Is", "").match(/[A-Z][a-z]+/g).join(" ") }
 				</Label>
 			) ];
@@ -25,8 +25,6 @@ export function SearchResult({ item, url, resultsFilter } = {}) {
 
 		return a;
 	}, []);
-
-	let googleQuery = `${ item.Name } ${ item.FullAddress }`.replace(/ /g, "+");
 
 	return (
 		<Segment raised>
@@ -48,8 +46,6 @@ export function SearchResult({ item, url, resultsFilter } = {}) {
 								</div>
 							) : null
 						}
-
-						{/* <iframe src={ `https://www.google.com/search?q=${ googleQuery }` } style={ { width: `100%`, height: 300, border: 0 } } loading="lazy" /> */}
 					</Container>
 				</Grid.Column>
 			</Grid.Row>
