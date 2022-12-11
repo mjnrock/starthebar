@@ -9,7 +9,7 @@ const VenueFlags = [
 	`IsDistillery`,
 ];
 
-export function SearchResult({ item, url, resultsFilter } = {}) {
+export function SearchResult({ item, resultsFilter } = {}) {
 	let flags = VenueFlags.reduce((a, flag, i) => {
 		if(!!item[ flag ]) {
 			return [ ...a, (
@@ -26,16 +26,31 @@ export function SearchResult({ item, url, resultsFilter } = {}) {
 		return a;
 	}, []);
 
+	/* Create a Google Search URL */
+	let searchUrl = `https://www.google.com/search?q=` + encodeURIComponent(`${ item.Name }, ${ item.City }, ${ item.State }`);
+	/* Create a Google Maps URL */
+	let mapUrl = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.FullAddress }`.replace(" ", "+"));
+
 	return (
 		<Segment raised>
 			<Grid.Row>
 				<Grid.Column>
 					<Container>
 						<Header as="h3">
-							{ item.Name }
+							{/* { item.Name } */ }
+							<a href={ searchUrl } target="_blank" rel="noreferrer">{ item.Name }</a>
 						</Header>
 
-						<a href={ url } target="_blank" rel="noreferrer">{ item.FullAddress }</a>
+						{
+							item.Phone ? (
+								<>
+									<a href={ `tel:${ item.Phone.replace(/[^0-9]+/gi, "") }` }>{ item.Phone }</a>
+									<br /><br />
+								</>
+							) : null
+						}
+
+						<a href={ mapUrl } target="_blank" rel="noreferrer">{ item.FullAddress }</a>
 
 						{
 							flags.length ? (

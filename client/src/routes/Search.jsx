@@ -54,13 +54,10 @@ export function Search() {
 			<Grid textAlign="center" style={{ paddingBottom: 20 }}>
 				{
 					msg.map((item, index) => {
-						/* Create a Google Maps URL */
-						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.FullAddress }`.replace(" ", "+"));
-
 						if(resultsFilter.some(v => item[ v ] !== 1)) return null;
 
 						return (
-							<SearchResult key={ item.LegalName + item.FullAddress } item={ item } url={ url } resultsFilter={ resultsFilter } />
+							<SearchResult key={ item.LegalName + item.FullAddress } item={ item } resultsFilter={ resultsFilter } />
 						);
 					})
 				}
