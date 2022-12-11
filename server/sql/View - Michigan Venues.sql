@@ -32,5 +32,9 @@ FROM
 		ON ml.LARABusinessID = msd.LARABusinessID
 WHERE
 	ml.IsSuspectRecord = 0
+    AND (
+		IsOnPremise = 1 
+        OR IsOffPremise = 1
+    )
 ORDER BY
 	Name;

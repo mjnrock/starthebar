@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Container, Button, Input, Message, Label } from "semantic-ui-react";
+import { Container, Button, Input, Message, Label, Segment, Icon } from "semantic-ui-react";
 
 let columnList = [
 	`LARABusinessID`,
@@ -20,8 +20,8 @@ let columnList = [
 	`IsSocialDistrict`,
 	`IsOnPremise`,
 	`IsOffPremise`,
-    `IsBrewery`,
-    `IsWinery`
+	`IsBrewery`,
+	`IsWinery`
 ].map(v => v.toLowerCase());
 
 export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
@@ -61,10 +61,10 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 					<p style={ { marginTop: 10 } }>Tags:</p>
 					<div>{ columnList.map(t => <Label key={ t } style={ { marginBottom: 10, cursor: "copy" } } onContextMenu={ e => e.preventDefault() } onMouseUp={ e => {
 						e.preventDefault();
-						
+
 						if(searchRef.current) {
 							let tag = `${ t }:`.toLowerCase();
-	
+
 							if(e.ctrlKey || e.button === 2) {
 								tag = `&&${ tag }`;
 							} else if(searchTerm.length) {
@@ -88,7 +88,16 @@ export function InfoPane({ searchType, searchRef, setSearchTerm, searchTerm }) {
 	}
 }
 
-export function SearchResult({ callback, result } = {}) {
+const VenueFlags = Object.fromEntries([
+	`IsSocialDistrict`,
+	`IsOnPremise`,
+	`IsOffPremise`,
+	`IsBrewery`,
+	`IsWinery`,
+	`IsDistillery`,
+].map(v => [ v, 1 ]));
+
+export function SearchResult({ callback, result, onResultsFilter } = {}) {
 	const searchRef = useRef(null);
 	const [ searchType, setSearchType ] = useState("tag");
 	const [ searchTerm, setSearchTerm ] = useState("");
@@ -97,6 +106,13 @@ export function SearchResult({ callback, result } = {}) {
 		name: [],
 		tag: [],
 	});
+	const [ resultsFilter, setResultsFilter ] = useState([]);
+
+	useEffect(() => {
+		if(onResultsFilter) {
+			onResultsFilter(resultsFilter);
+		}
+	}, [ resultsFilter ]);
 
 	useEffect(() => {
 		let fn = e => {
@@ -131,11 +147,11 @@ export function SearchResult({ callback, result } = {}) {
 			<div style={ { textAlign: "center" } }>
 				<InfoPane searchType={ searchType } searchRef={ searchRef } setSearchTerm={ setSearchTerm } searchTerm={ searchTerm } />
 				<Button.Group style={ { width: "50%", marginBottom: 10 } }>
-					<Button onClick={ e => setSearchType("area") } active={ searchType === "area" }>Area</Button>
+					<Button onClick={ e => setSearchType("area") } color={ searchType === "area" ? "blue" : "" }>Area</Button>
 					<Button.Or />
-					<Button onClick={ e => setSearchType("name") } active={ searchType === "name" }>Name</Button>
+					<Button onClick={ e => setSearchType("name") } color={ searchType === "name" ? "blue" : "" }>Name</Button>
 					<Button.Or />
-					<Button onClick={ e => setSearchType("tag") } active={ searchType === "tag" }>Tag</Button>
+					<Button onClick={ e => setSearchType("tag") } color={ searchType === "tag" ? "blue" : "" }>Tag</Button>
 				</Button.Group>
 				<br />
 				<Input ref={ searchRef } list={ searchType } style={ { width: "50%" } } type="text" value={ searchTerm } onChange={ e => setSearchTerm(e.target.value) } />
@@ -152,7 +168,51 @@ export function SearchResult({ callback, result } = {}) {
 
 			{
 				(result || []).length ? (
-					<div style={ { textAlign: "center", marginTop: 10, fontFamily: "monospace" } }><strong>{ result.length }</strong> Result(s)</div>
+					<>
+						<Segment basic={ true } textAlign="center" style={ { margin: 0 } }>
+							{
+								Object.keys(VenueFlags).map((flag, i) => {
+									return (
+										<Label
+											key={ flag }
+											color={ resultsFilter.includes(flag) ? "blue" : "" }
+											style={ {
+												cursor: "pointer",
+											} }
+											onClick={ e => {
+												if(!resultsFilter.includes(flag)) {
+													setResultsFilter([ ...resultsFilter, flag ]);
+												} else {
+													setResultsFilter(resultsFilter.filter(v => v !== flag));
+												}
+											} }
+										>
+											<Icon name={ resultsFilter.includes(flag) ? "check circle outline" : "circle outline" } />
+											{ flag.replace("Is", "").match(/[A-Z][a-z]+/g).join(" ") }
+										</Label>
+									);
+								})
+							}
+						</Segment>
+
+						<div style={ { textAlign: "center", marginTop: 10, fontFamily: "monospace" } }>
+							<strong>
+								{
+									resultsFilter.length ? (
+										<>
+											{
+												result.filter(v => {
+													let flags = Object.keys(VenueFlags).filter(flag => resultsFilter.includes(flag));
+													return flags.every(flag => v[ flag ]);
+												}).length
+											}
+										</>
+									) : result.length
+								}
+							</strong>
+							<span>&nbsp;Venue(s)</span>
+						</div>
+					</>
 				) : (
 					null
 				)

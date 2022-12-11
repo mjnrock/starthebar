@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Grid } from "semantic-ui-react";
+import { useState, useEffect } from "react";
+import { Grid, Label, Icon, Segment } from "semantic-ui-react";
 import SearchResult from "../components/SearchResult";
 import SearchPane from "../components/SearchPane";
 
@@ -25,8 +25,18 @@ function API(searchType, data, opts = {}) {
 	});
 };
 
+const VenueFlags = Object.fromEntries([
+	`IsSocialDistrict`,
+	`IsOnPremise`,
+	`IsOffPremise`,
+	`IsBrewery`,
+	`IsWinery`,
+	`IsDistillery`,
+].map(v => [ v, 1 ]));
+
 export function Search() {
 	const [ msg, setMsg ] = useState([]);
+	const [ resultsFilter, setResultsFilter ] = useState([]);
 
 	if(!msg || !msg.length) {
 		return (
@@ -36,7 +46,8 @@ export function Search() {
 
 	return (
 		<>
-			<SearchPane callback={ (...args) => API(...args).then(data => setMsg(data)) } result={ msg } />
+
+			<SearchPane callback={ (...args) => API(...args).then(data => setMsg(data)) } result={ msg } onResultsFilter={ csf => setResultsFilter(csf) } />
 
 			<hr style={ { marginBottom: 40 } } />
 
@@ -46,8 +57,10 @@ export function Search() {
 						/* Create a Google Maps URL */
 						let url = `https://www.google.com/maps/place/` + encodeURIComponent(`${ item.FullAddress }`.replace(" ", "+"));
 
+						if(resultsFilter.some(v => item[ v ] !== 1)) return null;
+
 						return (
-							<SearchResult key={ item.LegalName + item.FullAddress } item={ item } url={ url } />
+							<SearchResult key={ item.LegalName + item.FullAddress } item={ item } url={ url } resultsFilter={ resultsFilter } />
 						);
 					})
 				}

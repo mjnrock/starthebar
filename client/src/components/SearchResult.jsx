@@ -9,11 +9,14 @@ const VenueFlags = [
 	`IsDistillery`,
 ];
 
-export function SearchResult({ item, url } = {}) {
+export function SearchResult({ item, url, resultsFilter } = {}) {
 	let flags = VenueFlags.reduce((a, flag, i) => {
 		if(!!item[ flag ]) {
 			return [ ...a, (
-				<Label key={ flag }>
+				<Label
+					key={ flag }
+					color={ resultsFilter.includes(flag) ? "blue" : "" }
+				>
 					<Icon name="check" />
 					{ flag.replace("Is", "").match(/[A-Z][a-z]+/g).join(" ") }
 				</Label>
